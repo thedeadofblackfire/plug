@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="fr.dynacare.ihealth"
-    version="0.0.1">
+    version="0.0.2">
     <name>iHealth Plugin</name>
     <description>A plugin to show native alert</description>
     <license>Apache 2.0</license>
@@ -12,6 +12,9 @@
     <js-module src="www/plugin.js" name="IHealth">
         <clobbers target="cordova.plugins.IHealth" />
     </js-module>
+	<engines>
+		<engine name="cordova-android" version=">=4.0.0" />
+    </engines>
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="IHealthBinder" >
