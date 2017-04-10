@@ -34,9 +34,14 @@ public class IHealthHandler {
     }
 
     //iHEALTH ACCOUNT
-    final private String userName = "dynamoove@gmail.com";
+    final private String userName = "liu01234345555@jiuan.com";
+    final private String clientId = "2a8387e3f4e94407a3a767a72dfd52ea";
+    final private String clientSecret = "fd5e845c47944a818bc511fb7edb0a77";
+	/*
+	 final private String userName = "dynamoove@gmail.com";
     final private String clientId = "16493b954f53496ab970311e4a61eb9c";
     final private String clientSecret = "3300e2960cef4315b900f237b8fcaff6";
+	*/
 
     private int callbackId;
 
