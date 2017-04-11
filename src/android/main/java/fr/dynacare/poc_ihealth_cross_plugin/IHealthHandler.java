@@ -220,6 +220,17 @@ public class IHealthHandler {
         }
     }
 
+	// news stuff
+	public void disconnectDevice(String deviceType, String address){
+        Log.i("INFO", "[IHealthHandler] disconnectDevice function: Address => " + address + " Type => " + deviceType);
+        iHealthDevicesManager.getInstance().disconnectDevice(address, deviceType);
+		/*
+        if (!ret){
+            EventBus.getDefault().post(new IHealthEvent(IHealthEventType.DEVICE_CONNECTED, EventStatus.ERROR, null, ""));
+        }
+		*/
+    }
+	
     public void disconnectSdk(){
         Log.i("INFO", "[IHealthHandler] disconnectSdk function");
         try {
