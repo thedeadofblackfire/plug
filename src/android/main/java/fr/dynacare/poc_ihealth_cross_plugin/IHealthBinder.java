@@ -47,6 +47,7 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
     private final String SET_USER_ID = "setUserId";
     private final String GET_USER_ID = "getUserId";
     private final String SET_USER_INFO = "setUserInfo";
+	private final String GET_USER_INFO = "getUserInfo";
     private final String SYNC_TIME = "syncTime";
     private final String SET_TIME_MODE = "setTimeMode";
     private final String SEND_RANDOM_NUMBER = "sendRandomNumber";
@@ -65,6 +66,7 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
     CallbackContext mGetUserIdCallback;
     CallbackContext mSetUserIdCallback;
     CallbackContext mSetUserInfoCallback;
+	CallbackContext mGetUserInfoCallback;
     CallbackContext mSyncTimeCallback;
     CallbackContext mSetTimeModeCallback;
     CallbackContext mSendRandomNumber;
@@ -115,6 +117,9 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
         } else if (action.equals(SET_USER_INFO)){
             mSetUserInfoCallback = callback;
             setUserInfo(args);
+		} else if (action.equals(GET_USER_INFO)){
+            mGetUserInfoCallback = callback;
+            getUserInfo(args);
         } else if (action.equals(SYNC_TIME)){
             mSyncTimeCallback = callback;
             syncTime(args);
@@ -250,6 +255,44 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
             syncTimeCallback(EventStatus.ERROR, null);
         }
     }
+	
+	private void getUserInfo(JSONArray args){
+        Log.i("INFO", "[IHealthBinder] getUserInfo function");
+        if (args == null || args.length() != 1){
+            getUserInfoCallback(EventStatus.ERROR, null);
+            return;
+        }
+        try {
+            JSONObject jsonObject = args.getJSONObject(0);
+            if (jsonObject == null) throw new Exception("You need to pass at least one type");
+            String deviceModel = jsonObject.getString("model");
+            String deviceAddress = jsonObject.getString("address");
+            Log.i("INFO", "[IHealthBinder] getUserInfo deviceModel = " + deviceModel);
+            Log.i("INFO", "[IHealthBinder] getUserInfo deviceAddress = " + deviceAddress);
+            if (deviceModel.equals("AM3S")) {
+				/*
+                try {
+                    IHealthAM3S.getInstance().execAction(deviceAddress, GET_USER_INFO, null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    getUserInfoCallback(EventStatus.ERROR, null);
+                }
+				*/
+            } else if (deviceModel.equals("AM4")) {
+                try {
+                    IHealthAM4.getInstance().execAction(deviceAddress, GET_USER_INFO, null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    getUserInfoCallback(EventStatus.ERROR, null);
+                }
+            } else {
+                getUserInfoCallback(EventStatus.ERROR, null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            getUserInfoCallback(EventStatus.ERROR, null);
+        }
+    }
 
     private void setUserInfo(JSONArray args){
         Log.i("INFO", "[IHealthBinder] setUserId function");
@@ -262,14 +305,14 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
             if (jsonObject == null) throw new Exception("You need to pass at least one type");
             String deviceModel = jsonObject.getString("model");
             String deviceAddress = jsonObject.getString("address");
-            int age = jsonObject.getInt("age");
-            int height = jsonObject.getInt("height");
-            float weight = Float.parseFloat(jsonObject.getString("weight"));
-            int gender = jsonObject.getInt("gender");
-            int unit = jsonObject.getInt("unit");
-            int target = jsonObject.getInt("target");
-            int activityLevel = jsonObject.getInt("activityLevel");
-            int min = jsonObject.getInt("min");
+            int age = jsonObject.getInt("age"); // age - User's age, Range: [1, 255]
+            int height = jsonObject.getInt("height"); // height - User's height(int in cm), Range: [1, 255]
+            float weight = Float.parseFloat(jsonObject.getString("weight")); // weight - User's weight(float), Range: [1.0, 255.0]
+            int gender = jsonObject.getInt("gender"); // gender - User's gender, AmProfile.AM_SET_FEMALE (0) or AmProfile.AM_SET_MALE (1)
+            int unit = jsonObject.getInt("unit"); // unit - Distance's unit type(kilometre or miles), AmProfile.AM_SET_UNIT_IMPERIAL_STANDARD (0=miles) or AmProfile.AM_SET_UNIT_METRIC (1=kilometre)
+            int target = jsonObject.getInt("target"); // target - The goal of maximum steps, Range: [4, 2147483647(0x7FFFFFFF)]
+            int activityLevel = jsonObject.getInt("activityLevel"); // activityLevel - The level of activity strength, 1=indicates sedentary, 2=indicates active, 3=indicates very active
+            int min = jsonObject.getInt("min"); // min - swim target time(in minutes), Range: [1, 1439(23 * 60 + 59)]
 
             Parameters params = new Parameters();
             params.mUserInfo.mAge = age;
@@ -569,7 +612,9 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
             getUserIdCallback(event.mEventStatus, event.mData);
         } else if (event.mEventType.equals(IHealthEventType.SET_USER_ID)){
             setUserIdCallback(event.mEventStatus, event.mData);
-        } else if (event.mEventType.equals(IHealthEventType.SET_USER_INFO)){
+        } else if (event.mEventType.equals(IHealthEventType.GET_USER_INFO)){
+            getUserInfoCallback(event.mEventStatus, event.mData);
+		} else if (event.mEventType.equals(IHealthEventType.SET_USER_INFO)){
             setUserInfoCallback(event.mEventStatus, event.mData);
         } else if (event.mEventType.equals(IHealthEventType.SYNC_REAL_TIME)){
             syncTimeCallback(event.mEventStatus, event.mData);
@@ -664,6 +709,43 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
             }
         } else {
             Log.i("INFO", "[IHealthBinder] syncTimeCallback function, Can't fire JS callback, null");
+        }
+    }
+	
+	private void getUserInfoCallback(EventStatus mEventStatus, Object mData) {
+        Log.i("INFO", "[IHealthBinder] getUserInfoCallback function");
+        if (mGetUserInfoCallback != null) {
+            if (mEventStatus == EventStatus.SUCCESS) {
+                if (mData instanceof Data == false) {
+                    PluginResult deviceResult = new PluginResult(PluginResult.Status.ERROR, new JSONObject());
+                    deviceResult.setKeepCallback(true);
+                    mGetUserInfoCallback.sendPluginResult(deviceResult);
+                    return;
+                }
+                Data data = (Data) mData;
+                try {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("model", data.mDeviceModel);
+                    jsonObject.put("address", data.mAddress);
+					Log.i("INFO", "Here is data: " + data.mRawData);
+                    jsonObject.put("age", Integer.parseInt(data.mRawData));
+                    Log.i("INFO", "Here is my age: " + data.mRawData);
+                    PluginResult deviceResult = new PluginResult(PluginResult.Status.OK, jsonObject);
+                    deviceResult.setKeepCallback(true);
+                    mGetUserInfoCallback.sendPluginResult(deviceResult);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    PluginResult deviceResult = new PluginResult(PluginResult.Status.ERROR, new JSONObject());
+                    deviceResult.setKeepCallback(true);
+                    mGetUserInfoCallback.sendPluginResult(deviceResult);
+                }
+            } else if (mEventStatus == EventStatus.ERROR) {
+                PluginResult deviceResult = new PluginResult(PluginResult.Status.ERROR, new JSONObject());
+                deviceResult.setKeepCallback(true);
+                mGetUserInfoCallback.sendPluginResult(deviceResult);
+            }
+        } else {
+            Log.i("INFO", "[IHealthBinder] getUserInfoCallback function, Can't fire JS callback, null");
         }
     }
 

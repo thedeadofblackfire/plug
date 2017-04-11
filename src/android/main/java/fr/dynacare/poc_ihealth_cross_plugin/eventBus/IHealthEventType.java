@@ -17,6 +17,7 @@ public enum IHealthEventType {
     GET_USER_ID,
     SET_USER_ID,
     SET_USER_INFO,
+	GET_USER_INFO,
     SYNC_REAL_TIME,
     SET_TIME_MODE,
     SEND_RANDOM_NUMBER,

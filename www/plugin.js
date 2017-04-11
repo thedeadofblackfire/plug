@@ -20,6 +20,14 @@ module.exports = {
             "address": address
         }]);
     },
+	getUserInfo: function (model, address, successCalback, errorCallback){
+        console.log("we are in getUserInfo method !!");
+       	cordova.exec(successCalback, errorCallback, "IHealthBinder", "getUserInfo",
+        [{
+            "model": model,
+            "address": address
+        }]);
+    },
     setUserInfo: function (model, address, age, height, weight, gender, unit, target, activityLevel, min, successCalback, errorCallback){
         console.log("we are in setUserInfo method !!");
     	cordova.exec(successCalback, errorCallback, "IHealthBinder", "setUserInfo",

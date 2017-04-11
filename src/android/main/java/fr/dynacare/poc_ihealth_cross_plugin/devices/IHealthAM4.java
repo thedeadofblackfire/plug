@@ -147,6 +147,27 @@ public class IHealthAM4 {
                 ad.mAddress = mac;
                 ad.mDeviceModel = "AM4";
                 EventBus.getDefault().post(new IHealthEvent(IHealthEventType.SET_USER_INFO, EventStatus.SUCCESS, ad));
+			} else if (action.equals(AmProfile.ACTION_GET_USERINFO_AM)) {
+                try {
+                    Log.i("INFO", "[IHeathAM4] iHealthDevicesCallback, I'm in the get user info callback");
+                    Log.i("INFO", "[IHeathAM4] " + message);
+
+                    JSONObject info = new JSONObject(message);
+                    String age = info.getString(AmProfile.GET_USER_AGE_AM);
+                    Message msg = new Message();
+                    msg.what = HANDLER_MESSAGE;
+                    msg.obj = "AGE: " + age;
+                    myHandler.sendMessage(msg);
+
+                    Data ad = new Data();
+                    ad.mAddress = mac;
+                    ad.mDeviceModel = "AM4";
+                    ad.mRawData = id;
+                    EventBus.getDefault().post(new IHealthEvent(IHealthEventType.GET_USER_INFO, EventStatus.SUCCESS, ad));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+				
             } else if (action.equals(AmProfile.ACTION_SYNC_TIME_SUCCESS_AM)){
                 Log.i("INFO", "[IHeathAM4] iHealthDevicesCallback, I'm in the syncTime callback");
 
@@ -216,6 +237,8 @@ public class IHealthAM4 {
         } else if (action.equals("getUserId")){
             return true;
         } else if (action.equals("setUserInfo")){
+            return true;
+		} else if (action.equals("getUserInfo")){
             return true;
         } else if (action.equals("syncTime")){
             return true;
@@ -289,6 +312,9 @@ public class IHealthAM4 {
         } else if (action.equals("setUserInfo")){
             Log.i("INFO", "[IHeathAM4] execAction function, About to execute setUserInfo");
             am4Control.setUserInfo(params.mUserInfo.mAge, params.mUserInfo.mHeight, params.mUserInfo.mWeight, params.mUserInfo.mGender, params.mUserInfo.mUnit, params.mUserInfo.mTarget, params.mUserInfo.mActivityLevel,params.mUserInfo.mSwimTarget);
+		} else if (action.equals("getUserInfo")){
+            Log.i("INFO", "[IHeathAM4] execAction function, About to execute getUserInfo");
+            am4Control.getUserInfo();
         } else if (action.equals("syncTime")){
             Log.i("INFO", "[IHeathAM4] execAction function, About to execute syncTime");
             am4Control.syncRealTime();
