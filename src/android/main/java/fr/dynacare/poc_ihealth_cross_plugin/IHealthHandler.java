@@ -72,6 +72,7 @@ public class IHealthHandler {
             bundle.putString("mac", mac);
             bundle.putString("type", deviceType); 
 			Log.i("INFO", "[iHealthDevicesCallback -> onDeviceConnectionStateChange] mac -> " + mac + " type -> " + deviceType); // custom
+			Log.i("INFO", "[iHealthDevicesCallback -> onDeviceConnectionStateChange]status -> " + status + "errorID -> " + errorID); // custom
             Message msg = new Message();
             if (status == iHealthDevicesManager.DEVICE_STATE_CONNECTED) {
                 msg.what = HANDLER_CONNECTED;
@@ -143,7 +144,7 @@ public class IHealthHandler {
                     Bundle bundle_connection_failed = msg.getData();
                     String mac_connection_failed = bundle_connection_failed.getString("mac");
                     String type_connection_failed = bundle_connection_failed.getString("type");
-                    Log.i("INFO", "[myHandler -> HANDLER_DISCONNECT] The device connection has failed => " + mac_connection_failed);
+                    Log.i("INFO", "[myHandler -> HANDLER_CONNECTIONFAILED] The device connection has failed => " + mac_connection_failed);
                     EventBus.getDefault().post(new IHealthEvent(IHealthEventType.DEVICE_CONNECTION_FAILED, EventStatus.SUCCESS, new ConnectedData(type_connection_failed, mac_connection_failed, type_connection_failed)));
                     break;
                 case HANDLER_USER_STATUE:
@@ -212,6 +213,7 @@ public class IHealthHandler {
     public void connectDevice(String deviceType, String address){
         Log.i("INFO", "[IHealthHandler] connectDevice function: userName => " + userName + " Address => " + address + " Type => " + deviceType);
         boolean ret = iHealthDevicesManager.getInstance().connectDevice(userName, address, deviceType);
+		Log.i("INFO", "[IHealthHandler] connectDevice ret => "+ret);
 		// boolean ret = iHealthDevicesManager.getInstance().connectDevice(userName, address);
         if (!ret){
             EventBus.getDefault().post(new IHealthEvent(IHealthEventType.DEVICE_CONNECTED, EventStatus.ERROR, null, ""));
