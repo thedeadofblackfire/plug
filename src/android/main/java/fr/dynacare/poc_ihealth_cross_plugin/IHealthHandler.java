@@ -56,7 +56,7 @@ public class IHealthHandler {
     private com.ihealth.communication.manager.iHealthDevicesCallback iHealthDevicesCallback = new iHealthDevicesCallback() {
         @Override
         public void onScanDevice(String mac, String deviceType, int rssi) {
-            Log.i("INFO", "[iHealthDevicesCallback -> onScanDevice] Scanning a device -> " + mac);
+            Log.i("INFO", "[iHealthDevicesCallback -> onScanDevice] Scanning a device -> " + mac + " type -> " + deviceType); // custom
             Bundle bundle = new Bundle();
             bundle.putString("mac", mac);
             bundle.putString("type", deviceType);
@@ -71,6 +71,7 @@ public class IHealthHandler {
             Bundle bundle = new Bundle();
             bundle.putString("mac", mac);
             bundle.putString("type", deviceType);
+			Log.i("INFO", "[iHealthDevicesCallback -> onDeviceConnectionStateChange] mac -> " + mac + " type -> " + deviceType); // custom
             Message msg = new Message();
             if (status == iHealthDevicesManager.DEVICE_STATE_CONNECTED) {
                 msg.what = HANDLER_CONNECTED;
@@ -118,7 +119,7 @@ public class IHealthHandler {
                     if (mac_scan == null || type_scan == null) {
                         return;
                     }
-                    Log.i("INFO", "[myHandler -> HANDLER_SCAN] Scanning a device -> " + mac_scan);
+                    Log.i("INFO", "[myHandler -> HANDLER_SCAN] Scanning a device -> " + mac_scan + " type -> "  + type_scan);
                     EventBus.getDefault().post(new IHealthEvent(IHealthEventType.DEVICE_SCANNED, EventStatus.SUCCESS, new ScanData(type_scan,  mac_scan)));
                     break;
                 case HANDLER_CONNECTED:
@@ -208,9 +209,10 @@ public class IHealthHandler {
         }
     }
 
-    public void connectDevice(String address){
-        Log.i("INFO", "[IHealthHandler] connectDevice function: userName => " + userName + " Address => " + address);
-        boolean ret = iHealthDevicesManager.getInstance().connectDevice(userName, address);
+    public void connectDevice(String deviceType, String address){
+        Log.i("INFO", "[IHealthHandler] connectDevice function: userName => " + userName + " Address => " + address + " Type => " + deviceType);
+        boolean ret = iHealthDevicesManager.getInstance().connectDevice(userName, address, deviceType);
+		// boolean ret = iHealthDevicesManager.getInstance().connectDevice(userName, address);
         if (!ret){
             EventBus.getDefault().post(new IHealthEvent(IHealthEventType.DEVICE_CONNECTED, EventStatus.ERROR, null, ""));
         }

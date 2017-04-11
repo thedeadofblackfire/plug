@@ -63,11 +63,13 @@ module.exports = {
            	console.log("we are in registerOnDeviceConnectionFailed method !!");
             cordova.exec(successCalback, errorCallback, "IHealthBinder", "registerOnDeviceConnectionFailed", []);
     },
-  	connect: function(address, successCalback, errorCallback){
+  	connect: function(model, address, successCalback, errorCallback){
        	console.log("we are in connect method !!");
+		console.log(model); // adding
        	console.log(address);
     	cordova.exec(successCalback, errorCallback, "IHealthBinder", "connect",
     	 [{
+			"model": model,
     	    "address": address
     	 }]);
     },

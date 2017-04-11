@@ -344,9 +344,12 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
             JSONObject jsonObject = args.getJSONObject(0);
             if (jsonObject == null) throw new Exception("You need to pass at least one type");
             Log.i("INFO", "[IHealthBinder] connectDevice function");
+			String model = jsonObject.getString("model");
             String address = jsonObject.getString("address");
+			if (model == null || model.isEmpty()) throw new Exception("Type cannot be null or empty"); // adding
             if (address == null || address.isEmpty()) throw new Exception("address cannot be null or empty");
-            IHealthHandler.getInstance().connectDevice(address);
+            IHealthHandler.getInstance().connectDevice(model, address);
+			//IHealthHandler.getInstance().connectDevice(address);
         } catch (JSONException e){
             e.printStackTrace();
             deviceConnectedCallback(EventStatus.ERROR, null);
