@@ -74,7 +74,7 @@ module.exports = {
     	 }]);
     },
     disconnect: function(model, address, successCalback, errorCallback){
-       	console.log("we are in diconnect method !!");
+       	console.log("we are in disconnect method !!");
        	cordova.exec(successCalback, errorCallback, "IHealthBinder", "disconnect",
        	 [{
        	    "model": model,
