@@ -368,6 +368,9 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
             if (deviceModel == null || deviceAddress == null){
                 throw new Exception("You need to pass valid parameters to disconnect a device.");
             }
+			IHealthHandler.getInstance().disconnectDevice(address, 'TYPE_'+deviceModel); // new stuff
+			
+			// old code below ?
             if (deviceModel.equals("AM4")){
                 Log.i("INFO", "[IHealthBinder] Disconnecting AM4");
                 IHealthAM4.getInstance().execAction(deviceAddress, DISCONNECT, null);
@@ -375,6 +378,7 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
                 Log.i("INFO", "[IHealthBinder] Disconnecting AM3S");
                 IHealthAM3S.getInstance().execAction(deviceAddress, DISCONNECT, null);
             }
+			
         } catch (JSONException e) {
             e.printStackTrace();
             deviceDisconnectedCallback(EventStatus.ERROR, null);
@@ -864,7 +868,8 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
             if (mEventStatus == EventStatus.SUCCESS) {
                 try {
                     if (data.mModel.equals("AM3S")){
-                        //DO THAT HERE TOO!
+                        //@todo DO THAT HERE TOO!
+						
                     }else if (data.mModel.equals("AM4")){
                         IHealthAM4.getInstance().buildAmControl(data.mAddress);
                     }
