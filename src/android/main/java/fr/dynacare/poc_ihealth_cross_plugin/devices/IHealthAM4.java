@@ -162,7 +162,7 @@ public class IHealthAM4 {
                     Data ad = new Data();
                     ad.mAddress = mac;
                     ad.mDeviceModel = "AM4";
-                    ad.mRawData = info;
+                    ad.mRawData = message;
                     EventBus.getDefault().post(new IHealthEvent(IHealthEventType.GET_USER_INFO, EventStatus.SUCCESS, ad));
                 } catch (JSONException e) {
                     e.printStackTrace();
