@@ -368,7 +368,7 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
             if (deviceModel == null || deviceAddress == null){
                 throw new Exception("You need to pass valid parameters to disconnect a device.");
             }
-			IHealthHandler.getInstance().disconnectDevice(address, 'TYPE_'+deviceModel); // new stuff
+			IHealthHandler.getInstance().disconnectDevice(deviceAddress , 'TYPE_'+deviceModel); // new stuff
 			
 			// old code below ?
             if (deviceModel.equals("AM4")){
