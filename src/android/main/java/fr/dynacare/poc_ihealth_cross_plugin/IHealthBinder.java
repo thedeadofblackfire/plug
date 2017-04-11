@@ -728,8 +728,7 @@ public class IHealthBinder extends CordovaPlugin implements IHealthEventContract
                     jsonObject.put("model", data.mDeviceModel);
                     jsonObject.put("address", data.mAddress);
 					Log.i("INFO", "Here is data: " + data.mRawData);
-                    jsonObject.put("age", Integer.parseInt(data.mRawData));
-                    Log.i("INFO", "Here is my age: " + data.mRawData);
+                    jsonObject.put("user_info", data.mRawData);
                     PluginResult deviceResult = new PluginResult(PluginResult.Status.OK, jsonObject);
                     deviceResult.setKeepCallback(true);
                     mGetUserInfoCallback.sendPluginResult(deviceResult);
