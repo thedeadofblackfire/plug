@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="fr.dynacare.ihealth"
-    version="0.0.4">
+    version="0.0.5">
     <name>iHealth Plugin</name>
     <description>A plugin to show native alert</description>
     <license>Apache 2.0</license>
@@ -73,9 +73,14 @@
         <source-file src="libs/d2xx.jar"
             target-dir="libs"
             framework="true" />
-        <source-file src="libs/iHealthLibrary_2.3.2.jar"
+        <source-file src="libs/iHealthLibrary_2.3.2.16.jar"
             target-dir="libs"
             framework="true" />
+			<!--
+			<source-file src="libs/iHealthLibrary_2.3.2.jar"
+            target-dir="libs"
+            framework="true" />
+			-->
         <source-file src="libs/pl2303driver.jar"
             target-dir="libs"
             framework="true" />
@@ -112,7 +117,8 @@
             framework="true"/>
 
         <!--- PERMISSIONS -->
-        <config-file target="AndroidManifest.xml" parent="/manifest">
+		<!-- <config-file target="AndroidManifest.xml" parent="/manifest"> -->
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <uses-permission android:name="android.permission.BLUETOOTH"/>
             <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 			<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
