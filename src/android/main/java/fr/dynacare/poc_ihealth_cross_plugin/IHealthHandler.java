@@ -209,7 +209,7 @@ public class IHealthHandler {
     }
 
     public void connectDevice(String address){
-        Log.i("INFO", "[IHealthHandler] connectDevice function: Address => " + address);
+        Log.i("INFO", "[IHealthHandler] connectDevice function: userName => " + userName + " Address => " + address);
         boolean ret = iHealthDevicesManager.getInstance().connectDevice(userName, address);
         if (!ret){
             EventBus.getDefault().post(new IHealthEvent(IHealthEventType.DEVICE_CONNECTED, EventStatus.ERROR, null, ""));
