@@ -70,7 +70,7 @@ public class IHealthHandler {
         public void onDeviceConnectionStateChange(String mac, String deviceType, int status, int errorID) {
             Bundle bundle = new Bundle();
             bundle.putString("mac", mac);
-            bundle.putString("type", deviceType);
+            bundle.putString("type", deviceType); 
 			Log.i("INFO", "[iHealthDevicesCallback -> onDeviceConnectionStateChange] mac -> " + mac + " type -> " + deviceType); // custom
             Message msg = new Message();
             if (status == iHealthDevicesManager.DEVICE_STATE_CONNECTED) {
